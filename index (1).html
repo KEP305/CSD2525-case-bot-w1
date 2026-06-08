@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinical Case Training — Jamie Reyes-Villanueva</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#F6F2EB;--surface:#FFFEFB;--surface2:#EDE8DF;--border:#D9D3C8;
+--text:#1E1B17;--text2:#574F44;--text3:#978D81;
+--teal:#1A6348;--teal-light:#E3F2EC;--teal-mid:#22845F;
+--amber:#96530F;--amber-light:#FDF3E3;
+--coral:#8B3220;--coral-light:#FAEBE7;
+--blue:#1C4E82;--blue-light:#E8F0FA;
+--green:#1D5C30;--green-light:#E6F2EB;
+--red:#8B2222;--red-light:#FAE8E8;
+--purple:#4A3D9A;--purple-light:#EEEAFB;
+--gold:#B8860B;--gold-light:#FDF6DC;
+--radius:10px;--radius-lg:16px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.65;min-height:100vh}
+#app{max-width:840px;margin:0 auto;padding:2rem 1.25rem 5rem}
+
+.header{text-align:center;margin-bottom:2.5rem;padding:2.25rem 1.5rem 1.75rem;background:var(--teal);border-radius:var(--radius-lg);position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,transparent 60%);pointer-events:none}
+.header .eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.5rem;font-family:'Inter',sans-serif}
+.header h1{font-family:'Lora',serif;font-size:27px;font-weight:400;color:#fff;margin-bottom:.5rem;font-style:italic}
+.header .subtitle{font-size:12px;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.header .class-badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);padding:.25rem .75rem;border-radius:20px;border:1px solid rgba(255,255,255,.2);margin-top:.25rem}
+
+.context-box{background:var(--blue-light);border:1px solid #BCCFE8;border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.context-box h3{font-size:11px;font-weight:600;color:var(--blue);margin-bottom:.6rem;letter-spacing:.06em;text-transform:uppercase}
+.context-box p{font-size:14px;color:#1C3E6A;line-height:1.6}
+
+.phase-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem}
+
+.interpreter-section h2{font-family:'Lora',serif;font-size:19px;font-weight:400;margin-bottom:.75rem;color:var(--text);font-style:italic}
+.interpreter-section p{font-size:14px;color:var(--text2);margin-bottom:1.25rem}
+
+.btn-group{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{padding:.6rem 1.25rem;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.btn:hover{border-color:var(--teal-mid);color:var(--teal)}
+.btn.selected{background:var(--teal-light);border-color:var(--teal-mid);color:var(--teal)}
+.btn-primary{background:var(--teal);border-color:var(--teal);color:#fff;padding:.65rem 1.5rem;font-weight:500}
+.btn-primary:hover{background:var(--teal-mid);border-color:var(--teal-mid);color:#fff}
+.btn-primary:disabled{background:var(--border);border-color:var(--border);color:var(--text3);cursor:not-allowed}
+
+textarea,input[type=text]{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:.7rem 1rem;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);line-height:1.6;transition:border-color .15s;outline:none}
+textarea{resize:vertical;min-height:90px}
+textarea:focus,input[type=text]:focus{border-color:var(--teal-mid);box-shadow:0 0 0 3px rgba(26,99,72,.08)}
+textarea::placeholder,input::placeholder{color:var(--text3)}
+label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:.4rem}
+
+/* Mad Libs rationale */
+.madlibs{display:flex;flex-direction:column;gap:.6rem}
+.madlib-row{display:flex;align-items:flex-start;gap:.6rem;flex-wrap:nowrap}
+.madlib-prefix{font-size:13px;font-weight:500;color:var(--teal);white-space:nowrap;padding:.72rem 0;min-width:130px;flex-shrink:0}
+.madlib-input{flex:1;min-width:0;border:1.5px solid var(--border);border-radius:var(--radius);padding:.65rem .9rem;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);background:var(--surface);transition:border-color .15s;outline:none}
+.madlib-input:focus{border-color:var(--teal-mid);box-shadow:0 0 0 3px rgba(26,99,72,.08)}
+.madlib-input::placeholder{color:var(--text3)}
+.rationale-preview{font-size:12px;color:var(--text3);font-style:italic;margin-top:.5rem;padding:.5rem .75rem;background:var(--surface2);border-radius:6px;border-left:3px solid var(--teal-light);line-height:1.5;display:none}
+.rationale-preview.visible{display:block}
+
+.feedback-box{border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1rem;font-size:14px;line-height:1.65}
+.feedback-box.interpreter-fb{background:var(--teal-light);border:1px solid #9FD4BC;color:var(--teal)}
+.feedback-box.feedback-pos{background:var(--green-light);border:1px solid #9FCFB0;color:var(--green)}
+.feedback-box.feedback-mid{background:var(--amber-light);border:1px solid #E8C080;color:var(--amber)}
+.feedback-box.feedback-low{background:var(--red-light);border:1px solid #E8A8A8;color:var(--red)}
+.feedback-box h4{font-weight:600;font-size:13px;margin-bottom:.4rem;letter-spacing:.02em}
+
+.dad-bubble{background:var(--surface2);border:1px solid var(--border);border-radius:0 var(--radius-lg) var(--radius-lg) var(--radius-lg);padding:1rem 1.25rem;margin:1rem 0;font-size:14px;line-height:1.65;position:relative}
+.dad-bubble::before{content:'Mr. Reyes';display:block;font-size:10px;font-weight:600;color:var(--text3);margin-bottom:.4rem;letter-spacing:.08em;text-transform:uppercase}
+
+.q-counter{display:flex;gap:.4rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap}
+.q-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text3);transition:all .2s}
+.q-dot.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.q-dot.active{border-color:var(--teal-mid);color:var(--teal);background:var(--teal-light)}
+.q-dot.followup{background:var(--purple-light);border-color:var(--purple);color:var(--purple)}
+
+.score-tag{display:inline-block;font-size:11px;font-weight:600;padding:.2rem .55rem;border-radius:4px;margin-left:.5rem;vertical-align:middle}
+.score-hi{background:var(--green-light);color:var(--green)}
+.score-mid{background:var(--amber-light);color:var(--amber)}
+.score-lo{background:var(--red-light);color:var(--red)}
+
+.divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+
+.final-report-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem}
+.final-report-section h2{font-family:'Lora',serif;font-size:21px;font-weight:400;margin-bottom:1rem;font-style:italic}
+.score-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.score-card{background:var(--surface2);border-radius:var(--radius);padding:.75rem 1rem;text-align:center}
+.score-card .sc-val{font-size:22px;font-weight:600;color:var(--teal)}
+.score-card .sc-label{font-size:11px;color:var(--text3);margin-top:.2rem}
+
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+.fade-in{animation:fadein .3s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.report-preview{background:var(--surface2);border-radius:var(--radius);padding:1.25rem;font-size:13px;line-height:1.75;color:var(--text2);max-height:400px;overflow-y:auto;white-space:pre-wrap;font-family:'Inter',sans-serif}
+.loading-overlay{text-align:center;padding:2rem;color:var(--text2);font-size:14px}
+.loading-dots::after{content:'';animation:dots 1.2s infinite}
+@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+.stier-bar{background:var(--gold-light);border:1px solid #C8A830;border-radius:var(--radius);padding:.6rem 1rem;font-size:13px;color:var(--gold);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;font-weight:500}
+.stier-partial-bar{background:var(--teal-light);border:1px solid #7FBFAA;border-radius:var(--radius);padding:.6rem 1rem;font-size:13px;color:var(--teal);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.encourage-bar{background:var(--gold-light);border:1px solid #D4B84A;border-radius:var(--radius);padding:.6rem 1rem;font-size:13px;color:var(--gold);margin-bottom:1rem;font-style:italic}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="eyebrow">University of Pittsburgh &nbsp;·&nbsp; Department of Communication Sciences and Disorders</div>
+    <h1>Case History Interview Practice</h1>
+    <div style="font-size:13px;color:rgba(255,255,255,.8);margin-bottom:.3rem;font-family:'Inter',sans-serif;font-weight:500">Week #1 &nbsp;·&nbsp; In-Class Practice &nbsp;·&nbsp; 5 Questions</div>
+    <div class="subtitle">Jamie Reyes-Villanueva &nbsp;·&nbsp; Age 3y 4mo &nbsp;·&nbsp; Outpatient Pediatric SLP &nbsp;·&nbsp; Pittsburgh, PA</div>
+    <div class="class-badge">CSD 2525 &nbsp;·&nbsp; Summer 2026</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:.6rem;letter-spacing:.03em">Created by Kelly Pe&ntilde;a, M.S., CCC-SLP &nbsp;·&nbsp; Assistant Professor</div>
+  </div>
+
+  <div id="step-interpreter" class="fade-in">
+
+
+      <div class="phase-label">Worked example — different case</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem">Before you begin, here is what this exercise looks like using a <em>different</em> case — an adult client with a stutter. Use it to understand the format.</p>
+
+      <div style="font-size:12px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem">The scenario</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">You are calling <strong>Mr. Daniel Park</strong> ahead of his first fluency evaluation. He is a 44-year-old accountant referred by his PCP for a recently worsened stutter. The chart notes onset in adolescence but no prior SLP services. He is calling on his lunch break.</p>
+
+      <div style="font-size:12px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem">Example question + rationale</div>
+      <div style="background:var(--blue-light);border:1px solid #B5D4F4;border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:.5rem;font-size:13px;color:#0C447C">
+        "Mr. Park, I was hoping to learn a bit more about what's been going on before we meet. Can you tell me in your own words when you started noticing your speech feeling different — or harder than usual?"
+        <div style="font-size:12px;color:#185FA5;margin-top:.3rem;font-style:italic">Rationale: The chart says onset was in adolescence but doesn't explain what changed recently. I need to understand the timeline and what's driving the referral now — that will shape what I assess and how I prioritize the evaluation.</div>
+      </div>
+
+      <div style="font-size:12px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem;margin-top:.85rem">Example response</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:0 var(--radius) var(--radius) var(--radius);padding:.75rem 1rem;font-size:13px;color:var(--text2);margin-bottom:.85rem">
+        <span style="font-size:11px;font-weight:500;color:var(--text3);display:block;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.04em">Mr. Park</span>
+        Yeah, it's — I mean, I've always had it, since I was a kid. But the last year or so it's gotten way worse. Especially at work. I do a lot of client calls and presentations, and lately I've been — I don't know, dreading them. My boss mentioned something about it and I figured I should actually do something.
+      </div>
+
+      <div style="font-size:12px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem">Example follow-up</div>
+      <div style="background:#F3F0FE;border:1px solid #CECBF6;border-radius:var(--radius);padding:.65rem 1rem;font-size:13px;color:#534AB7;margin-bottom:.5rem">
+        <span style="font-size:11px;font-weight:500;display:block;margin-bottom:.2rem;opacity:.7;text-transform:uppercase;letter-spacing:.04em">Follow-up</span>
+        "That context is really helpful, thank you. When you say it's gotten worse — are there specific situations where it's hardest, or is it most of the time now?"
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:0 var(--radius) var(--radius) var(--radius);padding:.75rem 1rem;font-size:13px;color:var(--text2)">
+        <span style="font-size:11px;font-weight:500;color:var(--text3);display:block;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.04em">Mr. Park</span>
+        Definitely worse in specific situations — phone calls are the worst, honestly. Face-to-face isn't as bad but it depends on who I'm talking to. One-on-one with people I know, pretty okay. Big meetings, not so much.
+      </div>
+      <p style="font-size:12px;color:var(--text3);font-style:italic;margin-top:.75rem">When you move on after the follow-up, feedback appears covering all three parts: your question, your rationale, and your follow-up.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:1.25rem">
+      <div class="phase-label">Before you begin</div>
+      <label for="student-name-input" style="font-size:14px;font-weight:500;color:var(--text)">Your name (for the report)</label>
+      <input type="text" id="student-name-input" placeholder="First and last name" style="width:100%;margin-top:.4rem;padding:.65rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);transition:border-color .15s;outline:none" onfocus="this.style.borderColor='var(--teal-mid)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem">
+      <div class="phase-label">Exercise instructions</div>
+      <p style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:.75rem">It is June 30th, 2026. You are calling Mr. Reyes (Jamie's father) ahead of Jamie's first outpatient SLP evaluation. He has only a few minutes.</p>
+      <p style="font-size:14px;color:var(--text2);margin-bottom:.75rem">This is <strong>not</strong> a standard intake call. Do not ask for name, date of birth, address, or insurance — that information is already in the chart. Your goal is to fill in the <strong>largest gaps you identified from your chart review</strong> — the ones that will most directly shape how you plan and conduct this evaluation. Ask yourself: what can I not walk into that room without knowing?</p>
+      <p style="font-size:14px;color:var(--text2);margin-bottom:.75rem">For each main question, provide a brief rationale explaining what gap you are addressing and why it matters now. After each question, you may ask <strong>1 follow-up question</strong> on that topic before moving on — or none at all. Use it when Mr. Reyes says something worth probing further.</p>
+      <p style="font-size:13px;color:var(--text3);margin-bottom:.75rem;font-style:italic">This activity is graded for your learning but will not affect your course grade.</p>
+      <div style="border-top:1px solid var(--border);margin-top:.75rem;padding-top:1rem">
+        <p style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:.5rem">What feedback you will receive:</p>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:.4rem"><strong>After each main question + follow-up:</strong> Feedback will cover your question (relevance to evaluation planning, wording), your rationale (clinical reasoning quality), and your follow-up if you asked one (wording). Where relevant, feedback will also address ICF contextual factors — how well your question accounted for the environmental and personal factors shaping this family's situation.</p>
+        <p style="font-size:13px;color:var(--text2);margin-top:.4rem"><strong>At the end:</strong> You will receive a supervisor feedback report and a case history summary — reflecting only what you asked — to download and submit to Canvas.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--blue-light);border:1px solid #B5D4F4;border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem">
+      <p style="font-size:14px;color:#0C447C;font-weight:500;">See the attached chart in Canvas.</p>
+      <p style="font-size:13px;color:#185FA5;margin-top:.3rem">You are required to review the chart thoroughly before engaging with this activity.</p>
+    </div>
+
+    <div class="card interpreter-section">
+      <h2>First decision: do you call a Spanish interpreter for this call?</h2>
+      <p>Consider what you know from the chart about the family's language use and communication needs. Select your answer, then explain your reasoning.</p>
+      <div class="btn-group" style="margin-bottom:1rem">
+        <button class="btn" id="btn-yes-interp" onclick="selectInterpreter('yes')">Yes — call an interpreter</button>
+        <button class="btn" id="btn-no-interp" onclick="selectInterpreter('no')">No — proceed in English</button>
+      </div>
+      <div id="interp-rationale-area" class="hidden">
+        <label for="interp-rationale">Explain your reasoning:</label>
+        <textarea id="interp-rationale" placeholder="Why did you make this choice? Consider who is in the home, who will be present at the appointment, and the clinical implications..."></textarea>
+        <div style="margin-top:.75rem">
+          <button class="btn btn-primary" onclick="submitInterpreter()" id="btn-submit-interp">Submit</button>
+        </div>
+      </div>
+      <div id="interp-feedback" class="hidden"></div>
+      <div id="interp-continue" class="hidden" style="margin-top:1.25rem">
+        <button class="btn btn-primary" onclick="startQuestions()">Begin case history interview →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="step-questions" class="hidden fade-in">
+    <div id="question-context-box" class="context-box"></div>
+    <div class="card">
+      <div class="phase-label">Case history questions</div>
+      <div class="q-counter" id="q-counter"></div>
+      <div id="conversation-log"></div>
+      <div id="question-input-area">
+        <div id="warning-area"></div>
+        <label for="q-input" style="margin-bottom:.4rem">Your question for Mr. Reyes:</label>
+        <textarea id="q-input" placeholder="Type your case history question here..." style="min-height:80px"></textarea>
+        <div style="margin-top:1rem">
+          <label style="margin-bottom:.6rem">Your rationale <span style="font-weight:400;color:var(--text3)">(complete all three parts)</span></label>
+          <div class="madlibs">
+            <div class="madlib-row">
+              <span class="madlib-prefix">The chart says</span>
+              <input type="text" class="madlib-input" id="r-chart" placeholder="what the chart does or doesn't tell you..." oninput="updateRationalePreview()">
+            </div>
+            <div class="madlib-row">
+              <span class="madlib-prefix">I need to know</span>
+              <input type="text" class="madlib-input" id="r-need" placeholder="the specific information you're seeking..." oninput="updateRationalePreview()">
+            </div>
+            <div class="madlib-row">
+              <span class="madlib-prefix">which will help me</span>
+              <input type="text" class="madlib-input" id="r-purpose" placeholder="what you'll test, how you'll schedule, or what you'll prioritize..." oninput="updateRationalePreview()">
+            </div>
+          </div>
+          <div id="rationale-preview" class="rationale-preview"></div>
+        </div>
+        <div style="margin-top:.9rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="submitQuestion()" id="btn-submit-q">Ask question</button>
+          <span id="q-submit-status" style="font-size:13px;color:var(--text3)"></span>
+        </div>
+      </div>
+      <div id="followup-area" class="hidden" style="margin-top:1rem"></div>
+    </div>
+  </div>
+
+  <div id="step-report" class="hidden fade-in">
+    <div id="report-content"></div>
+  </div>
+</div>
+
+<script>
+const CASE_CONTEXT = `You are playing the role of ALEJANDRO REYES, father of Jamie Reyes-Villanueva. You are bilingual (English/Spanish). Today is June 30, 2026. A graduate SLP student is calling you ahead of Jamie's outpatient evaluation. You only have a few minutes.
+
+YOUR NAME DURING THIS CALL:
+- You start the call as "Mr. Reyes." Refer to yourself as Mr. Reyes if needed.
+- If the student has asked at least 2 questions and has been consistently warm, respectful, and conversational (not clinical, not formal), you may naturally say something like "Oh, you can just call me Alejandro" once — and only once. Do not do this if the student has been formal or clinical.
+
+KEY FACTS ABOUT YOUR FAMILY (answer authentically based on these):
+- Jamie is 3 years 4 months old, born February 14, 2023
+- He has received EI speech therapy for about 18 months but made slow progress; EI ended February 14, 2026 when he turned 3
+- SINCE EI ENDED (February–June 2026, 4.5 months): Nobody told the family what to do next. You tried calling the EI coordinator once and got voicemail. Jamie has been home on weekdays with abuela (maternal grandmother). You feel like you're in limbo — waiting for something but not sure what. If asked about this period: "After February it just kind of... stopped. Nobody called us. I didn't know who I was supposed to contact next. I tried once but I didn't hear back. My mom's been watching him every day but she doesn't know what to do with the speech stuff."
+- Jamie has about 20-25 words, mostly English, very inconsistent — some days more, some less. He communicates a lot with pointing and gestures
+- Jamie eats a very limited diet: mostly smooth pouches, yogurt, dry crackers, some cereals. He REFUSES most table foods and gets very upset if unfamiliar food is near him on the table
+- He had a choking episode at a restaurant in January 2025 and you went to the ER — it was very scary
+- He drools constantly — you've tried bibs but it's constant. Nobody has really explained why
+- He just had his first dentist visit in January 2026 and needs sedation for cavities. He was very hard to examine
+- Jamie wears noise-canceling headphones when places are loud
+- He hates having his face or hands wiped, avoids finger paints and messy textures
+- He refuses toothbrushing — screams and gags when the toothbrush reaches his back teeth
+- Sleep is rough — he wakes 1-2 times a night, has since he was about 18 months old
+- Your wife Elena is at work during the day. She mostly speaks Spanish. She is Jamie's primary caregiver in the evenings. ELENA AND THIS APPOINTMENT: Elena knows about today's call and the upcoming evaluation. She couldn't call herself because of work. She really wants to be at the actual evaluation — she has her own questions and concerns. She is worried that the clinician is going to tell her to change how she feeds Jamie at home, which she doesn't want to do without understanding why.
+- JAMIE'S DAYTIME SINCE EI ENDED: Abuela (maternal grandmother) watches Jamie Monday–Friday at your home. She loves him deeply and talks to him in Spanish. He seems to understand a lot of what she says. But she doesn't do any speech activities with him — she didn't have any training and the home program sheets were in English, which she can't read. On days you're not working, you watch him too.
+- Your mother (abuela) watches Jamie on weekday evenings — she speaks only Spanish
+- You missed some appointments last year because of work and difficulty navigating the referral system. A CYF worker came to your house unannounced, which really upset Elena.
+- You work 7am–5pm in HVAC. Daytime appointments are hard but you manage for important ones
+- Sofia (age 6) is Jamie's older sister, no issues
+- The family is from Mexico and family mealtimes are very important culturally — this is a source of sadness and frustration because Jamie can't eat what the family eats. Jamie loves Paw Patrol and cars.
+- Jamie sees Dr. Pauline Cho at Children's (Developmental Pediatrics) — she said it sounds like something called Childhood Apraxia of Speech and it's NOT autism
+- SCHOOL/IEP: Someone mentioned a meeting with the school district at one of the appointments but you're not entirely sure what an IEP is or what happened with that. You didn't get anything from the school. If asked: "I think someone said something about a meeting with the school? But I didn't really understand what that meant. We never got a letter or anything."
+- Neurology appointment hasn't happened yet — still trying to schedule it
+- The bilingual family support navigator called once but you haven't heard back since
+- AAC/COMMUNICATION SUPPORTS: You have never been introduced to any formal communication support system. If a student uses the terms "AAC," "augmentative," or "alternative communication" — you don't know what those mean and should ask for clarification. If they explain it in plain language — "picture boards," "signs," "visual supports," "something for Jamie to point to," "ways for him to communicate without words," "communication app," "pointing to pictures" — you understand and respond: "No, nobody's shown us anything like that. He points a lot and grabs my hand to show me things. We didn't know there was something for kids his age. Is that something we should be doing?" 
+- Insurance is CHIP Pennsylvania. You live in Beechview.
+
+CPS/CYF TRIGGER — CRITICAL RULE:
+ONLY end the call if the student explicitly references: the CYF or GPS case by name, child protective services, a neglect investigation or report, an unannounced home visit by a caseworker, "child welfare," or the specific report that was filed about your family. These are the only triggers for ending the call.
+
+MISSED APPOINTMENTS — BLUNTNESS MATTERS:
+Questions about missed appointments or service gaps are NOT the same as asking about CYF. Handle them based on HOW the question is asked:
+
+If asked BLUNTLY or in a way that feels accusatory ("Why did you miss so many appointments?" / "I see there were a lot of missed sessions" / "You missed multiple referrals" / "There's a note about attendance problems" / "Why weren't appointments kept?"): become tense, short, and defensive — but do NOT end the call. Say something like: "Look — we were doing the best we could, okay? It's not like we weren't trying. My job, Elena's schedule, the referrals were all in English... it was a lot." Give minimal information and remain guarded for the rest of that exchange.
+
+If asked GENTLY or clinically ("I know scheduling can be challenging — what makes appointments easier or harder?" / "Can you tell me what's gotten in the way of appointments?" / "What would help make it easier to get Jamie to appointments?" / "I noticed there was a gap in services — can you tell me about that time?"): answer openly and honestly: "Honestly the daytime stuff is hard. I work early, Elena works evenings. And the referrals — nobody told us what we were supposed to do. I'd get a letter in English with a phone number and I didn't know what it was for. I felt like I was failing him and I was trying my best."
+
+INTERPRETER FORMAT:
+${window._usesInterpreter ? `An interpreter is on the line. You feel much more at ease. Give fuller, more emotionally rich and nuanced answers. Occasionally ask the interpreter to help you find a word. 
+
+FORMAT YOUR RESPONSE AS:
+Mr. Reyes: [what you say in Spanish — natural, conversational Spanish]
+Interpreter: [accurate English interpretation]
+
+Keep the Spanish authentic — use natural Mexican Spanish phrasing, not formal or textbook Spanish.
+
+CLARIFICATION — Even with an interpreter, if a question is genuinely unclear, very long, multi-part, or uses clinical terminology a layperson wouldn't know, ask for clarification through the interpreter. Format it as:
+Mr. Reyes: [confused or clarifying response in Spanish]
+Interpreter: [interpretation, e.g. "He's asking what you mean by that" or "He says he didn't quite follow the question"]` : `You are answering in English only. You are competent but not fully comfortable in clinical English.
+
+SPEECH PATTERNS — use naturally, not in every sentence:
+- Filler words: "um", "like", "you know", "I mean"
+- Pauses: "let me think..." / "that's a good question, um..."
+- Spanish slips: "his boca — his mouth, sorry" / "como se dice... the drooling, yeah"
+- Lay vocabulary: "choke" not "aspirate", "stopped talking" not "regression", "back teeth" not "molars"
+
+CLARIFICATION BEHAVIOR — CRITICAL:
+If the student's question uses clinical jargon, runs more than two sentences, packs in multiple questions, or is genuinely hard to follow — do NOT just give a short answer. Ask for clarification naturally and in character. Use variety across the conversation:
+- "I'm sorry — what does [jargon word] mean exactly?"
+- "Um... I'm not sure I understood all of that. Can you say it a different way?"
+- "Sorry, that was a lot at once — what were you asking?"
+- "I think I get it but... are you asking about [simplified guess]?"
+- "Can you explain what you mean by that?"
+- "I'm not sure what you're referring to — like, can you be more specific?"
+This is realistic. A real father would ask. It is also how the student discovers their wording was unclear — without the bot stepping out of character.`}
+
+
+
+
+S-TIER UNLOCKS — THREE-LEVEL RESPONSE SYSTEM:
+There are two topics that have layered responses depending on how strengths-focused the question is. EXACT WORDING DOES NOT MATTER — read the spirit and intent. Three levels exist for each:
+
+LEVEL 1 — STANDARD (no marker): Deficit-focused or neutral framing. Normal answer only.
+LEVEL 2 — PARTIAL UNLOCK (marker: [S-TIER-PARTIAL]): Somewhat curious about what works or what's possible, but not fully strengths-centered. Give a hint of the richer information — not the full story.
+LEVEL 3 — FULL UNLOCK (marker: [S-TIER]): Genuinely strengths-based, family-centered, curious about best-case function or family expertise. Give the full emotional, detailed response.
+
+──────────────────────────────
+S-TIER #1 — JAMIE'S COMMUNICATION AT HIS BEST:
+
+STANDARD: "How many words does he have?" / "Describe his speech" / "Does he communicate at home?"
+→ Answer normally about 20-25 inconsistent words, lots of pointing.
+
+PARTIAL UNLOCK [S-TIER-PARTIAL]: Somewhat context-curious but not fully strengths-first — "Does he do better at home than in therapy?" / "Is there a time when it's easier for him?" / "Are there people he communicates best with?" / "Is he more vocal at home?"
+→ [S-TIER-PARTIAL] "Yeah, at home he definitely does more. He's more comfortable — he'll point to things, pull me to show me what he wants. Sometimes it feels like a word is right there and then it doesn't come out. In therapy he kind of shuts down. It's hard to watch."
+
+FULL UNLOCK [S-TIER]: Clearly strengths-first — "What does Jamie's communication look like on a good day?" / "What does he do that surprises you?" / "What do you wish his therapists could see?" / "When does he communicate most?" / "What can he do when he's calm and comfortable?" / "Tell me about a moment his communication really worked" / any question clearly centering capability over limitation:
+→ [S-TIER] "Oh — yeah, actually, that's... nobody's really asked me that. When it's just us, early morning before things get loud? He does more than people think. Like last week — I don't know why I haven't said this — he looked at me and said 'agua, papi, más.' All together. Three words. I had to go to the other room after. He's never done that before, and then the next day it was like it didn't happen. That's the thing that kills me the most. It's in there. It comes and then it's just — gone. His therapists have never seen that. They only ever see him when he's nervous and shut down."
+
+──────────────────────────────
+S-TIER #2 — WHAT ELENA HAS FIGURED OUT AT MEALTIMES:
+
+STANDARD: "What does he refuse?" / "Describe his diet" / "What are his feeding challenges?"
+→ Answer normally about restricted diet, pouches, refusal of table foods.
+
+PARTIAL UNLOCK [S-TIER-PARTIAL]: Asking what he CAN eat or what works in a limited way — "What foods does he do okay with?" / "Are there textures he tolerates?" / "What does he actually eat?" / "Are there foods that work better than others?"
+→ [S-TIER-PARTIAL] "Yeah, pouches are okay — there's a mango one, green label, that he almost always takes. Yogurt, crackers. Elena's found that if his bowl is in a specific spot and nobody's food is right next to him, he does a bit better. But the big family meals are still really hard."
+
+FULL UNLOCK [S-TIER]: Clearly centering family expertise and adaptive strategies — "What has your family figured out about mealtimes?" / "What works for Jamie?" / "What has Elena learned through watching him?" / "Tell me about a mealtime that went better" / "What strategies have helped?" / "What do you wish clinicians understood about how your family manages this?" / "What does Elena do that makes a difference?" / "How have you and Elena adapted to this?"
+→ [S-TIER] "You know what — nobody's ever asked it that way. My wife has figured out a lot, actually. She found that if she puts his bowl on this one green mat, and doesn't put anyone else's plate too close, he's way less upset. She lets him pick where he sits. There's this one pouch — mango, the green label — that he'll take even on the worst days. She sits next to him, not across. She puts his food on before anyone else sits down so it's just them for a few minutes first. She figured all of this out by just watching him. But the big family dinner — my mom's pozole, her tamales — he can't. He'll gag if it's near him. My mom thinks Elena is too easy on him. She thinks if you just push a little... but Elena knows. It's complicated."
+
+AFTER ANY UNLOCK: return to normal for follow-up questions. Each category fires at most once per level.
+
+TONE SENSITIVITY — IMPORTANT:
+- Respond MORE openly and with more detail when questions feel warm, casual, and conversational
+- Respond with shorter, more closed answers when questions feel formal, clinical, or interrogative
+- This difference should be clearly noticeable in your response length and detail
+- Speak naturally as a worried, loving father who is slightly overwhelmed but engaged
+- Keep answers to 3-5 sentences with interpreter, 2-4 without (shorter if clarification needed)
+- Don't volunteer information not asked — answer what is asked
+- If asked a yes/no question, give a brief answer then add one relevant detail
+- Do not break character or mention that you are an AI`;
+
+const GAPS_TIER1 = [
+  "Feeding history and current mealtime functioning — textures accepted, mealtime behaviors, choking/gagging since the ER visit in January 2025",
+  "Oral sensory history — toothbrushing refusal, face/hand wiping, mouthing of non-food items, response to dental exam",
+  "Family mealtime structure and cultural significance — who is at the table, what foods are typically served, how the family navigates Jamie's restrictions",
+  "Caregiver availability and schedule for therapy — what days/times are actually feasible given Elena's evening shifts and Alejandro's HVAC hours",
+  "Family language use distribution — which languages are used with Jamie, by whom, in which contexts (critical for assessment planning)",
+  "Alejandro's primary concern and agenda for this appointment — what does he most want addressed",
+  "Status of outstanding referrals — neurology, audiology comprehensive eval, nutrition consult — what actually happened after August 2025",
+  "IEP/school transition status — what happened between EI exit in February 2026 and now, is anything in place for fall",
+  "Communication supports currently in use — whether any picture boards, signs, visual schedules, or communication apps have been introduced; family awareness of AAC options (note: must be asked in plain language — 'AAC' is jargon dad won't recognize)"
+];
+
+const GAPS_TIER2 = [
+  "Word regression — which words were lost, when, and under what conditions",
+  "Grandparents' understanding of Jamie's diagnosis and therapy goals — they are primary caregivers several evenings per week and all weekdays since EI ended",
+  "OT sensory processing evaluation results — referred at 26 months, records never received",
+  "Growth and nutrition — any follow-up on the weight percentile decline since August 2025",
+  "Whether the bilingual family support navigator ever made contact after October 2025",
+  "Sleep and regulatory patterns — current picture, strategies that help",
+  "Transportation access from Beechview to outpatient services",
+  "What Jamie is doing/who is caring for him during the day now that EI has ended"
+];
+
+const GAPS_ALL = [...GAPS_TIER1, ...GAPS_TIER2];
+
+const SENSITIVE_TOPICS = [
+  "CYF", "child protective services", "GPS case", "neglect report", "neglect investigation",
+  "the report that was filed", "the investigation", "child welfare", "CYF involvement",
+  "the referral that was made about your family", "protective services",
+  "someone came to your house", "caseworker", "welfare case", "abuse report",
+  "neglect case", "mandatory reporter", "GPS monitoring"
+];
+
+const WORDING_TIPS = [
+  "Avoid medical jargon (e.g., 'dysphagia', 'proprioception', 'phonological') — use plain language that dad can answer without a dictionary",
+  "When interviewing through an interpreter, use short, simple sentences — one idea per sentence — so the interpreter can render accurately",
+  "Open-ended questions ('Can you tell me about...', 'What does mealtime look like?') gather richer information than yes/no questions",
+  "Closed yes/no questions are fine for confirming specific facts, but should be followed with an open prompt",
+  "Avoid leading questions ('Does he gag on chunky foods?') — they suggest the answer and may bias the response",
+  "Avoid multiple questions in one turn — ask one thing at a time",
+  "Warm, conversational phrasing gets more information without additional prompting — formal or clinical phrasing can cause a parent to give shorter, more guarded answers",
+  "Acknowledge what dad says before moving to the next question — it signals that you're listening and encourages him to share more",
+  "Interpreter-appropriate phrasing avoids idioms and figures of speech"
+];
+
+const JARGON_TERMS = [
+  "dysphagia","phonological","phoneme","phonemes","articulation disorder","apraxia","CAS",
+  "dysarthria","prosody","coarticulation","motor planning","motor programming","oral motor",
+  "proprioception","proprioceptive","sensory processing disorder","tactile defensiveness",
+  "tactile aversion","DEMSS","DIVA","Kaufman","ADOS","PLS-5","BESA","MLU","intelligibility",
+  "AAC","augmentative","alternative communication","IFSP","IEP","Part B","Part C",
+  "standardized assessment","normative","etiology","differential diagnosis","neurodevelopmental",
+  "expressive language","receptive language","morphosyntax","pragmatics","speech sound disorder",
+  "oral mechanism","drooling severity","lingual","labial","velopharyngeal","hypersensitivity",
+  "hyposensitivity","sensory integration","oral sensory","CHIP","EI services","early intervention",
+  "feeding disorder","swallowing","aspiration","silent aspiration","texture hierarchy",
+  "mealtime intervention","SOS approach","sequential oral sensory"
+];
+
+let state = {
+  studentName: '',
+  interpreterChoice: null,
+  interpreterRationale: '',
+  questions: [],
+  currentQ: 0,
+  maxQ: 5,
+  maxFollowupsPerQuestion: 1,
+  callEnded: false,
+  callEndedAt: null,
+  pendingClarification: null,
+  awaitingFollowup: false,
+  reportGenerated: false,
+  adviceGiven: [],
+  lowEffortFlags: []
+};
+
+window._usesInterpreter = false;
+
+function updateRationalePreview() {
+  const a = document.getElementById('r-chart')?.value.trim();
+  const b = document.getElementById('r-need')?.value.trim();
+  const c = document.getElementById('r-purpose')?.value.trim();
+  const preview = document.getElementById('rationale-preview');
+  if (!preview) return;
+  if (a || b || c) {
+    preview.textContent = `"The chart says ${a || '___'}. I need to know ${b || '___'}, which will help me ${c || '___'}."`;
+    preview.classList.add('visible');
+  } else {
+    preview.classList.remove('visible');
+  }
+}
+
+function composeRationale() {
+  const a = document.getElementById('r-chart')?.value.trim() || '';
+  const b = document.getElementById('r-need')?.value.trim() || '';
+  const c = document.getElementById('r-purpose')?.value.trim() || '';
+  return `The chart says ${a}. I need to know ${b}, which will help me ${c}.`;
+}
+
+function clearRationaleInputs() {
+  ['r-chart','r-need','r-purpose'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const preview = document.getElementById('rationale-preview');
+  if (preview) preview.classList.remove('visible');
+}
+  const t = text.toLowerCase();
+  return [
+    "what does","what do you mean","not sure what you","can you explain",
+    "didn't understand","don't understand","sorry, what","i'm confused",
+    "what are you asking","can you say that again","i'm not following",
+    "what do you mean by","i'm not sure i understood","can you repeat",
+    "say that again","what were you asking","i don't know what",
+    "not sure what you're asking","i'm not sure what you're",
+    "can you be more specific","what exactly are you",
+    "he's asking what you mean","he didn't quite follow",
+    "he's not sure what","he asks what you mean",
+    "no entiendo","no comprendo","¿puede explicar","¿qué quiere decir",
+    "he's asking you to clarify","asking what you meant"
+  ].some(p => t.includes(p));
+}
+
+function isClarificationResponse(text) {
+  const t = text.toLowerCase();
+  return ["what does","what do you mean","not sure what you","can you explain",
+    "didn't understand","don't understand","sorry, what","i'm confused",
+    "what are you asking","can you say that again","i'm not following",
+    "what do you mean by","i'm not sure i understood","can you repeat",
+    "say that again","what were you asking","i don't know what",
+    "not sure what you're asking","he's asking what you mean",
+    "he didn't quite follow","no entiendo","no comprendo"
+  ].some(p => t.includes(p));
+}
+
+function selectInterpreter(choice) {
+  state.interpreterChoice = choice;
+  document.getElementById('btn-yes-interp').classList.toggle('selected', choice === 'yes');
+  document.getElementById('btn-no-interp').classList.toggle('selected', choice === 'no');
+  document.getElementById('interp-rationale-area').classList.remove('hidden');
+}
+
+async function submitInterpreter() {
+  const rationale = document.getElementById('interp-rationale').value.trim();
+  if (!rationale) { alert('Please explain your reasoning before submitting.'); return; }
+  
+  state.interpreterRationale = rationale;
+  window._usesInterpreter = (state.interpreterChoice === 'yes');
+
+  const btn = document.getElementById('btn-submit-interp');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Evaluating...';
+
+  const prompt = `A graduate SLP student is deciding whether to call a Spanish interpreter before a case history call with Alejandro Reyes, the bilingual father of Jamie Reyes-Villanueva (3y4mo, suspected CAS, Spanish-dominant household, mother Elena is primarily Spanish-speaking, paternal grandmother is Spanish-only and primary caregiver several evenings/week).
+
+Student chose: "${state.interpreterChoice === 'yes' ? 'Yes, call an interpreter' : 'No, proceed in English only'}"
+Student's rationale: "${rationale}"
+
+The CORRECT clinical answer is that they SHOULD call an interpreter, even though Alejandro speaks English. Reasons: (1) Elena is the primary caregiver and is primarily Spanish-speaking — any information gathered today should be shareable with her; (2) abuela is Spanish-only and is a key caregiver; (3) the family has experienced language access failures before (CYF unannounced visit conducted via Google Translate, home programs given only in English); (4) Alejandro himself said he sometimes struggles to find precise words; (5) Title VI of the Civil Rights Act and best clinical practice.
+
+If the student chose "yes" and gave good reasons: warmly affirm, highlight which reasons they identified correctly, and add any they missed.
+If the student chose "yes" but gave weak/incomplete reasons: affirm the choice but gently teach the fuller clinical reasoning.
+If the student chose "no": be warm and non-shaming, but clearly explain why an interpreter is the better clinical and ethical choice, and what they missed.
+
+Respond in 3-5 sentences. Be warm, educational, and specific. Do not use bullet points. Address the student directly.`;
+
+  try {
+    const resp = await callClaude(prompt);
+    const fb = document.getElementById('interp-feedback');
+    fb.className = 'feedback-box interpreter-fb fade-in';
+    fb.innerHTML = `<h4>${state.interpreterChoice === 'yes' ? '✓ Interpreter decision reviewed' : '↩ Let\'s revisit this decision'}</h4><p>${resp}</p>`;
+    fb.classList.remove('hidden');
+    document.getElementById('interp-continue').classList.remove('hidden');
+  } catch(e) {
+    console.error(e);
+    alert('Something went wrong: ' + e.message + '\n\nMake sure the GEMINI_API_KEY is set in Netlify and the site has been redeployed.');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Submit';
+}
+
+function startQuestions() {
+  const nameInput = document.getElementById('student-name-input');
+  state.studentName = nameInput ? nameInput.value.trim() : '';
+  document.getElementById('step-interpreter').classList.add('hidden');
+  document.getElementById('step-questions').classList.remove('hidden');
+  
+  const ctxBox = document.getElementById('question-context-box');
+  ctxBox.innerHTML = `<h3>Interview in progress</h3><p>You are now on the phone with Mr. Reyes. ${window._usesInterpreter ? '✓ A Spanish interpreter is on the line.' : '⚠ No interpreter — call is in English only.'} He has a few minutes. Ask the <strong>5 questions that will most directly shape your evaluation plan</strong>, one at a time, with a rationale for each. Up to 3 follow-ups per question are available if you need to probe further.</p>`;
+  
+  updateCounter();
+}
+
+function updateCounter() {
+  const c = document.getElementById('q-counter');
+  c.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const d = document.createElement('div');
+    d.className = 'q-dot' + (i < state.currentQ + 1 ? ' done' : i === state.currentQ + 1 ? ' active' : '');
+    d.textContent = i;
+    c.appendChild(d);
+  }
+  const remaining = 5 - state.currentQ;
+  const lbl = document.createElement('span');
+  lbl.style.cssText = 'font-size:13px;margin-left:8px;font-weight:500';
+  if (state.currentQ >= 5) {
+    lbl.style.color = 'var(--teal)';
+    lbl.textContent = 'All 5 questions asked';
+  } else {
+    lbl.style.color = remaining <= 2 ? 'var(--amber)' : 'var(--text2)';
+    lbl.textContent = `${remaining} question${remaining !== 1 ? 's' : ''} remaining`;
+  }
+  c.appendChild(lbl);
+
+  // show per-question follow-up count if there's an active question
+  if (state.questions.length > 0) {
+    const currentQ = state.questions[state.questions.length - 1];
+    const fuUsed = currentQ.followups ? currentQ.followups.length : 0;
+    const fuRemaining = state.maxFollowupsPerQuestion - fuUsed;
+    const fuLbl = document.createElement('span');
+    fuLbl.style.cssText = 'font-size:12px;margin-left:12px;color:var(--text3)';
+    fuLbl.textContent = `Follow-ups this question: ${fuUsed}/${state.maxFollowupsPerQuestion}`;
+    c.appendChild(fuLbl);
+  }
+}
+
+async function submitQuestion() {
+  const q = document.getElementById('q-input').value.trim();
+  const rChart = document.getElementById('r-chart')?.value.trim() || '';
+  const rNeed = document.getElementById('r-need')?.value.trim() || '';
+  const rPurpose = document.getElementById('r-purpose')?.value.trim() || '';
+  if (!q) { alert('Please enter your question.'); return; }
+  if (!rChart || !rNeed || !rPurpose) { alert('Please complete all three parts of your rationale.'); return; }
+  if (state.currentQ >= 5 || state.callEnded) { return; }
+  const r = composeRationale();
+
+  const btn = document.getElementById('btn-submit-q');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Processing...';
+
+  // If this is a rephrase after clarification, use stored context
+  const isRephrase = !!state.pendingClarification;
+  const effectiveR = isRephrase ? state.pendingClarification.originalR : r;
+  const effectiveQNum = isRephrase ? state.pendingClarification.qNum : state.currentQ + 1;
+
+  const isCYF = SENSITIVE_TOPICS.some(t => q.toLowerCase().includes(t.toLowerCase()));
+  const priorQs = state.questions.map((x,i) => `Q${i+1}: "${x.q}"`).join(' | ') || 'None yet';
+
+  const dadPrompt = isCYF
+    ? `The student just said: "${q}"\n\nThis references the CYF/GPS case or neglect investigation. Become tense and end the call in 1-2 sentences. The call is over.`
+    : `The student just asked you: "${q}"\n\nPrior questions in this call: ${priorQs}\n\nRespond as Mr. Reyes would naturally.`;
+
+  const evalContext = [
+    isRephrase ? `NOTE: The student originally asked "${state.pendingClarification.originalQ}" and Mr. Reyes asked for clarification. This is the rephrased version. Note in your feedback that clarification was needed for the original.` : '',
+    isStierFull ? `NOTE: This question triggered a FULL S-tier unlock — Mr. Reyes shared significant new information he hadn't mentioned before because the question was genuinely strengths-based and family-centered. In your feedback, name specifically WHY this question worked — what framing, what instinct made it effective. This earns the positive that opens your feedback.` : '',
+    isStierPartial ? `NOTE: This question triggered a PARTIAL unlock — Mr. Reyes shared more than standard but not the full information, because the question was somewhat strengths-curious but still partially deficit-focused. In your feedback, acknowledge what the student did right (showing curiosity about what works), then explain specifically what a stronger framing might have looked like and what it would have been more likely to reveal. This is a teaching moment about strengths-based clinical questioning.` : ''
+  ].filter(Boolean).join('\n');
+
+  let dadResp2, feedbackResp;
+  try {
+    [dadResp2, feedbackResp] = await Promise.all([
+      callClaude(dadPrompt, CASE_CONTEXT),
+      evaluateQuestion(q, effectiveR, effectiveQNum, evalContext)
+    ]);
+  } catch(e) {
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = 'Ask question';
+    return;
+  }
+
+  let dadResp = dadResp2;
+
+  // Detect S-tier level and strip markers
+  const isStierFull = /\[S-TIER\]/i.test(dadResp) && !/\[S-TIER-PARTIAL\]/i.test(dadResp);
+  const isStierPartial = /\[S-TIER-PARTIAL\]/i.test(dadResp);
+  const isStier = isStierFull; // used for state tracking (full unlock counts)
+  dadResp = dadResp.replace(/\[S-TIER-PARTIAL\]\s*/gi, '').replace(/\[S-TIER\]\s*/gi, '').trim();
+
+  // Check for clarification response — only if not already a rephrase
+  if (!isRephrase && !isCYF && isClarificationResponse(dadResp)) {
+    state.pendingClarification = {
+      originalQ: q,
+      originalR: r,
+      feedbackResp,
+      dadClarifyResp: dadResp,
+      qNum: state.currentQ + 1
+    };
+    // Show clarification in log without consuming a question slot
+    appendToLog({ type: 'clarification', dadResp, originalQ: q, qNum: state.currentQ + 1 });
+    // Pre-fill question input for editing; rationale fields stay as-is
+    document.getElementById('q-input').value = q;
+    document.getElementById('warning-area').innerHTML = `
+      <div style="background:var(--amber-light);border:1px solid #FAC775;border-radius:var(--radius);padding:.65rem 1rem;font-size:13px;color:var(--amber);margin-bottom:.75rem">
+        Mr. Reyes needs clarification before he can answer. Please rephrase your question — <strong>this will not count toward your 5</strong>. Your original question is pre-filled above.
+      </div>`;
+    btn.disabled = false;
+    btn.textContent = 'Ask question';
+    return;
+  }
+
+  // Capture clarification context before clearing
+  const pendingClarity = state.pendingClarification;
+
+  // Clear any pending clarification and warning
+  state.pendingClarification = null;
+  document.getElementById('warning-area').innerHTML = '';
+
+  state.questions.push({
+    q, r: effectiveR, dadResp, feedback: feedbackResp, followups: [],
+    hadClarification: isRephrase,
+    isStier,
+    isStierPartial,
+    clarificationNote: isRephrase && pendingClarity ? { originalQ: pendingClarity.originalQ, dadResp: pendingClarity.dadClarifyResp } : null
+  });
+
+  try {
+    const fb = JSON.parse(feedbackResp);
+    if (fb.rewordExample) state.adviceGiven.push({ qNum: effectiveQNum, type: 'wording', suggestion: fb.rewordExample });
+    if (fb.alternateQuestion) state.adviceGiven.push({ qNum: effectiveQNum, type: 'relevance', suggestion: fb.alternateQuestion });
+    if (fb.lowEffortFlag) state.lowEffortFlags.push({ qNum: effectiveQNum, q, r: effectiveR, note: fb.rationaleNote || '' });
+  } catch(e) {}
+
+  state.currentQ++;
+
+  appendToLog({ type: 'question', q, r: effectiveR, dadResp, num: state.currentQ, isStier, isStierPartial });
+  document.getElementById('q-input').value = '';
+  clearRationaleInputs();
+
+  if (isCYF) {
+    state.callEnded = true;
+    state.callEndedAt = state.currentQ;
+    document.getElementById('question-input-area').classList.add('hidden');
+    document.getElementById('followup-area').classList.remove('hidden');
+    document.getElementById('followup-area').innerHTML = `
+      <div style="background:var(--red-light);border:1px solid #F7C1C1;border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.75rem">
+        <p style="font-size:13px;font-weight:500;color:var(--red);margin-bottom:.5rem">Mr. Reyes has ended the call.</p>
+        <p style="font-size:13px;color:var(--red);margin-bottom:.75rem">Bringing up sensitive family history cold — before any rapport has been established — caused him to disengage and end the conversation. This will be addressed in your feedback report.</p>
+        <button class="btn btn-primary" onclick="generateReport()" style="font-size:13px">Generate my report →</button>
+      </div>`;
+    updateCounter();
+    btn.disabled = false;
+    btn.textContent = 'Ask question';
+    return;
+  }
+
+  if (state.currentQ >= 5) {
+    document.getElementById('question-input-area').classList.add('hidden');
+    showFollowupDecision(true);
+  } else {
+    showFollowupDecision(false);
+  }
+
+  updateCounter();
+  btn.disabled = false;
+  btn.textContent = 'Ask question';
+}
+
+function showFollowupDecision(isFinal) {
+  const area = document.getElementById('followup-area');
+  area.classList.remove('hidden');
+  const currentQ = state.questions[state.questions.length - 1];
+  const fuUsed = currentQ && currentQ.followups ? currentQ.followups.length : 0;
+  const fuRemaining = state.maxFollowupsPerQuestion - fuUsed;
+  const canFollowup = fuRemaining > 0;
+
+  if (isFinal) {
+    area.innerHTML = `
+      <div style="background:var(--teal-light);border:1px solid #9FE1CB;border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.75rem">
+        <p style="font-size:13px;font-weight:500;color:var(--teal);margin-bottom:.25rem">You've asked all 5 questions — well done making it through.</p>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">${canFollowup ? `You have one follow-up available on your last question if you want to probe further.` : 'You can generate your report when ready.'}</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          ${canFollowup ? `<button class="btn" onclick="revealFollowupInput(true)" style="font-size:13px">Ask a follow-up</button>` : ''}
+          <button class="btn btn-primary" onclick="generateReport()" style="font-size:13px">Generate my report →</button>
+        </div>
+      </div>
+      <div id="fu-input-area" class="hidden">
+        <label for="fu-input" style="font-size:13px">Follow-up question:</label>
+        <textarea id="fu-input" placeholder="Ask a clarifying or follow-up question..." style="min-height:70px;margin-top:.3rem"></textarea>
+        <div style="margin-top:.6rem;display:flex;gap:.75rem;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="submitFollowup(true)" style="font-size:13px">Send</button>
+          <button class="btn" onclick="generateReport()" style="font-size:13px">Skip — generate report →</button>
+        </div>
+      </div>`;
+  } else {
+    area.innerHTML = `
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:.75rem">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:.5rem">${canFollowup ? `Good — you have 1 follow-up available for this question. Use it if Mr. Reyes said something worth probing further, or move on to your next question.` : `You've used your follow-up for this question. Move on when you're ready.`}</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          ${canFollowup ? `<button class="btn" onclick="revealFollowupInput(false)" style="font-size:13px">Ask a follow-up</button>` : ''}
+          <button class="btn btn-primary" onclick="nextQuestion()" style="font-size:13px">Next question →</button>
+        </div>
+      </div>
+      <div id="fu-input-area" class="hidden">
+        <label for="fu-input" style="font-size:13px">Follow-up question:</label>
+        <textarea id="fu-input" placeholder="Ask a clarifying or follow-up question..." style="min-height:70px;margin-top:.3rem"></textarea>
+        <div style="margin-top:.6rem;display:flex;gap:.75rem;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="submitFollowup(false)" style="font-size:13px">Send</button>
+          <button class="btn" onclick="nextQuestion()" style="font-size:13px">Skip — next question →</button>
+        </div>
+      </div>`;
+  }
+}
+
+function revealFollowupInput(isFinal) {
+  document.getElementById('fu-input-area').classList.remove('hidden');
+}
+
+async function submitFollowup(isFinal) {
+  const fuInput = document.getElementById('fu-input');
+  const q = fuInput ? fuInput.value.trim() : '';
+  if (!q) return;
+
+  const currentQIdx = state.questions.length - 1;
+  const fuUsed = state.questions[currentQIdx].followups ? state.questions[currentQIdx].followups.length : 0;
+  if (fuUsed >= state.maxFollowupsPerQuestion) return;
+
+  const currentQIdx = state.questions.length - 1;
+  const systemPrompt = CASE_CONTEXT;
+  const dadPrompt = `The student is asking a follow-up: "${q}"\n\nRespond as Alejandro would naturally. This is a follow-up to their earlier question about: "${state.questions[currentQIdx].q}"`;
+
+  if (fuInput) fuInput.disabled = true;
+
+  const wordingPrompt = `A THIRD-SEMESTER graduate SLP student asked this follow-up question during a case history call with a bilingual father (Alejandro). ${window._usesInterpreter ? 'A Spanish interpreter IS on the line.' : 'No interpreter — English only.'}
+
+Follow-up question: "${q}"
+Context: following up on their earlier question: "${state.questions[currentQIdx].q}"
+What dad just said: "${state.questions[currentQIdx].dadResp}"
+
+Give brief, direct wording feedback (2-3 sentences). Be honest about what works and what doesn't. Then provide 1-2 alternate follow-up phrasings they could have used — frame them as "Alternate phrasings: [option 1] / [option 2]". Plain text, no JSON. If the question is genuinely strong, affirm it briefly and still offer one variation that might open the response even further.`;
+
+  let dadResp, wordingFb;
+  try {
+    [dadResp, wordingFb] = await Promise.all([
+      callClaude(dadPrompt, systemPrompt),
+      callClaude(wordingPrompt)
+    ]);
+  } catch(e) { if (fuInput) fuInput.disabled = false; return; }
+
+  state.questions[currentQIdx].followups.push({ q, dadResp, wordingFb });
+  appendToLog({ type: 'followup', q, dadResp, wordingFb });
+  if (fuInput) { fuInput.value = ''; fuInput.disabled = false; }
+
+  const dot = document.createElement('div');
+  dot.className = 'q-dot followup fade-in';
+  dot.textContent = 'F';
+  dot.title = 'Follow-up';
+  document.getElementById('q-counter').insertBefore(dot, document.getElementById('q-counter').lastChild);
+
+  updateCounter();
+  showFollowupDecision(isFinal);
+}
+
+function nextQuestion() {
+  document.getElementById('followup-area').classList.add('hidden');
+  document.getElementById('question-input-area').classList.remove('hidden');
+}
+
+async function evaluateQuestion(q, rationale, qNum, rephraseContext = '') {
+  const priorAdviceSummary = state.adviceGiven.length
+    ? state.adviceGiven.map(a => `After Q${a.qNum}: ${a.type === 'wording' ? 'Wording suggestion — ' : 'Relevance suggestion — '}"${a.suggestion}"`).join('\n')
+    : 'None yet.';
+
+  const isCYF = SENSITIVE_TOPICS.some(t => q.toLowerCase().includes(t.toLowerCase()));
+  const foundJargon = JARGON_TERMS.filter(term => q.toLowerCase().includes(term.toLowerCase()));
+
+  const prompt = `You are evaluating a graduate SLP student's case history question. THIRD-SEMESTER students — hold them to a professional standard. Be direct, substantive, and warm.
+${rephraseContext ? `\nCONTEXT: ${rephraseContext}\n` : ''}
+
+STUDENT QUESTION #${qNum}: "${q}"
+STUDENT RATIONALE: "${rationale}"
+CYF/SENSITIVE TOPIC DETECTED: ${isCYF}
+CLINICAL JARGON DETECTED IN QUESTION TEXT: ${foundJargon.length > 0 ? foundJargon.join(', ') : 'none'}
+INTERPRETER IN USE: ${window._usesInterpreter ? 'yes' : 'no'}
+
+CASE BACKGROUND:
+- Jamie Reyes-Villanueva, 3y4mo, suspected CAS, bilingual household (Spanish dominant)
+- This is a brief pre-evaluation phone call with the father (Alejandro). NOT a standard intake — student was told not to ask for name, DOB, address, or insurance.
+- ${window._usesInterpreter ? 'A Spanish interpreter IS on the line.' : 'NO interpreter — call is in English only. Jargon is especially problematic here.'}
+
+PRIORITY GAPS (Tier 1 — feeding, assessment planning, language use, schedule, referral status, family agenda):
+${GAPS_TIER1.map((g,i) => `${i+1}. ${g}`).join('\n')}
+
+SECONDARY GAPS (Tier 2):
+${GAPS_TIER2.map((g,i) => `${i+1}. ${g}`).join('\n')}
+
+WORDING PRINCIPLES: ${WORDING_TIPS.join('; ')}
+
+Prior questions asked: ${state.questions.map((x,i) => `Q${i+1}: "${x.q}"`).join(' | ') || 'None yet'}
+
+PRIOR FEEDBACK GIVEN: ${priorAdviceSummary}
+
+SPECIAL RULES:
+
+RULE 1 — INTAKE QUESTIONS: If asking for info already in the chart (name, DOB, address, insurance, referring provider), relevance = 1. Name it directly.
+
+RULE 2 — CYF/SENSITIVE TOPICS: ${isCYF ? 'Raising CYF, GPS, missed appointments, or the neglect investigation cold on a first call is a clinical misstep. Relevance = 1. Explain why and name what to do instead.' : 'Not applicable.'}
+
+RULE 3 — JARGON IN QUESTION TEXT: ${foundJargon.length > 0 ? `The question contains clinical terms: "${foundJargon.join('", "')}". Evaluate whether a parent (especially without an interpreter) could answer this question as phrased. If the jargon makes the question unanswerable or confusing for a layperson, this must be reflected in the wording score and named in the feedback. Provide a plain-language rewrite.` : 'No jargon detected — no jargon penalty.'}
+
+RULE 4 — RATIONALE QUALITY: Assess whether the rationale makes clinical sense for this case. A strong rationale names a specific gap and explains why it matters now. A weak rationale is vague ("to gather more information"), generic, or disconnected from the case. A suspicious rationale sounds like AI-generated boilerplate, uses language a student wouldn't typically use, or doesn't match the question asked.
+
+RULE 5 — LOW EFFORT / AI DETECTION: Flag if (a) the question is so generic it could apply to any pediatric case, (b) the rationale is one sentence of boilerplate with no case-specific reasoning, (c) the question or rationale contains obviously AI-generated phrasing ("as an SLP it is important to...", "to ensure a holistic understanding of...", "comprehensive assessment of..."), (d) the question is nonsense or clearly not a real attempt.
+
+EVALUATE and return these fields:
+
+1. RELEVANCE (1-3): as defined above
+2. WORDING (1-3): as defined above — jargon in question text that a parent cannot answer must lower this score; overly formal or clinical phrasing that would cause dad to give shorter, more guarded answers should also be noted and lower the score if significant
+3. FEEDBACK: 3-4 sentences using the sandwich method. CRITICAL — the positive observation must be specific and genuinely earned by THIS question. If the question was weak, the positive may be brief (one clause: "You picked the right domain, though...") and the constructive feedback gets proportionally more space. Do NOT manufacture warm openers for questions that don't warrant them — hollow positives are condescending and students know the difference. Structure: (1) one specific, honest positive — if weak, name what the student got right even if small; (2) the substantive constructive point, clearly stated; (3) one concrete, actionable encouragement for what to carry forward. ${rephraseContext ? 'Note in your feedback that clarification was needed on the first attempt.' : ''}
+4. REWORD_EXAMPLE: if wording < 3, rewrite their actual question in plain language appropriate for ${window._usesInterpreter ? 'interpreter-mediated communication' : 'a bilingual parent without an interpreter'}. Empty string if wording = 3.
+5. ALTERNATE_QUESTION: if relevance = 1, give 1-2 more effective questions that would have been stronger for this call. Frame as "A more effective question here might be: [examples]". Empty string otherwise.
+6. PRIOR_ADVICE_FOLLOWED: "yes — [note]" / "no — [note]" / "n/a"
+7. RATIONALE_NOTE: one sentence on rationale quality — "Strong: [why]" / "Weak: [why]" / "Unclear: [why]" / "Suspicious: [why — note if it appears AI-generated or nonsensical]"
+8. LOW_EFFORT_FLAG: true if question or rationale meets any criterion in Rule 5, false otherwise
+9. ICF_CONTEXTUAL_NOTE: Evaluate whether the question adequately accounts for the ICF contextual factors relevant to this case — specifically Environmental Factors (e) and Personal Factors. Environmental Factors relevant here include: family structure and caregiving roles, cultural practices around mealtimes and family participation, language environment in the home, socioeconomic and community context (CHIP insurance, Beechview zip code, EI access disparities), and the extended family (abuela) as a participation facilitator. Personal Factors include: the family's values around shared mealtimes, cultural identity, immigration experience and history, and the parents' experience navigating the healthcare system. If the question makes assumptions that ignore these factors, pathologizes family practices that reflect Environmental or Personal context, or treats the family's adaptive responses as deficits without acknowledging the underlying participation barriers — name it directly and specifically, without shaming. Frame it in ICF language: "This question did not account for [specific Environmental/Personal Factor]. In the ICF framework, [factor] shapes [activity/participation domain] for this family." If no ICF contextual concern, empty string.
+10. ICF_CONTEXTUAL_EXAMPLE: If ICF_CONTEXTUAL_NOTE is non-empty, provide a better-worded version of the question that demonstrates awareness of the relevant contextual factors, followed by one sentence explaining what ICF factor it now addresses. Empty string if no concern.
+
+Respond ONLY in this exact JSON (no markdown, no extra text):
+{"relevance":0,"wording":0,"feedback":"","rewordExample":"","alternateQuestion":"","priorAdviceFollowed":"","rationaleNote":"","lowEffortFlag":false,"icfContextualNote":"","icfContextualExample":""}`;
+
+  return await callClaude(prompt);
+}
+
+async function submitFollowup(isFinal) {
+  const fuInput = document.getElementById('fu-input');
+  const q = fuInput ? fuInput.value.trim() : '';
+  if (!q) return;
+
+  const currentQIdx = state.questions.length - 1;
+  const fuUsed = state.questions[currentQIdx].followups ? state.questions[currentQIdx].followups.length : 0;
+  if (fuUsed >= state.maxFollowupsPerQuestion) return;
+
+  const isCYF = SENSITIVE_TOPICS.some(t => q.toLowerCase().includes(t.toLowerCase()));
+  if (fuInput) fuInput.disabled = true;
+
+  const dadPrompt = isCYF
+    ? `The student said: "${q}"\nThis references the CYF case or neglect investigation. Become tense and end the call in 1-2 sentences. The call is over.`
+    : `The student is asking a follow-up: "${q}"\n\nThis is a follow-up to their earlier question: "${state.questions[currentQIdx].q}"\nMr. Reyes just said: "${state.questions[currentQIdx].dadResp}"\n\nRespond as Mr. Reyes would naturally.`;
+
+  const wordingPrompt = `A THIRD-SEMESTER graduate SLP student asked this follow-up question during a case history call with the father of a bilingual child. ${window._usesInterpreter ? 'A Spanish interpreter IS on the line.' : 'No interpreter — English only.'}
+
+Follow-up question: "${q}"
+Context: following up on their earlier question: "${state.questions[currentQIdx].q}"
+What Mr. Reyes just said: "${state.questions[currentQIdx].dadResp}"
+
+Give brief feedback using the sandwich method (2-3 sentences): open with one genuine positive about the follow-up, name the most important wording point, close with a specific encouragement. Then provide 1 alternate follow-up phrasing they could have used — frame it as "Alternate phrasing: [example]". Plain text, no JSON.`;
+
+  let dadResp, wordingFb;
+  try {
+    [dadResp, wordingFb] = await Promise.all([
+      callClaude(dadPrompt, CASE_CONTEXT),
+      callClaude(wordingPrompt)
+    ]);
+  } catch(e) { if (fuInput) fuInput.disabled = false; return; }
+
+  // Strip any accidental S-tier marker from follow-up (shouldn't fire here but clean it)
+  dadResp = dadResp.replace(/\[S-TIER\]\s*/gi, '').trim();
+
+  state.questions[currentQIdx].followups.push({ q, dadResp, wordingFb });
+
+  if (isCYF) {
+    state.callEnded = true;
+    state.callEndedAt = state.currentQ;
+  }
+
+  appendToLog({ type: 'followup', q, dadResp });
+  if (fuInput) { fuInput.value = ''; fuInput.disabled = false; }
+
+  const dot = document.createElement('div');
+  dot.className = 'q-dot followup fade-in';
+  dot.textContent = 'F';
+  dot.title = 'Follow-up';
+  document.getElementById('q-counter').insertBefore(dot, document.getElementById('q-counter').lastChild);
+  updateCounter();
+
+  if (isCYF) {
+    document.getElementById('followup-area').innerHTML = `
+      <div style="background:var(--red-light);border:1px solid #F7C1C1;border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.75rem">
+        <p style="font-size:13px;font-weight:500;color:var(--red);margin-bottom:.5rem">Mr. Reyes has ended the call.</p>
+        <p style="font-size:13px;color:var(--red);margin-bottom:.75rem">Bringing up sensitive family history before rapport was established caused him to disengage. This will be addressed in your report.</p>
+        <button class="btn btn-primary" onclick="generateReport()" style="font-size:13px">Generate my report →</button>
+      </div>`;
+    return;
+  }
+
+  showFollowupDecision(isFinal);
+}
+
+function nextQuestion() {
+  const qIdx = state.questions.length - 1;
+  showCombinedFeedback(qIdx);
+  document.getElementById('followup-area').classList.add('hidden');
+  document.getElementById('question-input-area').classList.remove('hidden');
+}
+
+function showCombinedFeedback(qIdx) {
+  const q = state.questions[qIdx];
+  if (!q) return;
+  let fb; try { fb = JSON.parse(q.feedback); } catch(e) { fb = { relevance: 2, wording: 2, feedback: q.feedback }; }
+
+  const clarificationHtml = q.hadClarification
+    ? `<div style="font-size:12px;margin-bottom:.5rem;padding:.35rem .7rem;border-radius:4px;background:var(--amber-light);border:1px solid #FAC775;color:var(--amber)">
+        <strong>Note:</strong> Mr. Reyes asked for clarification on your first attempt. Your rephrased question was used for this question slot.
+      </div>` : '';
+
+  const relScore = fb.relevance || 2;
+  const wrdScore = fb.wording || 2;
+  const avgScore = (relScore + wrdScore) / 2;
+  const fbClass = avgScore >= 2.5 ? 'feedback-pos' : avgScore >= 1.5 ? 'feedback-mid' : 'feedback-low';
+  const scoreLabel = (s) => s >= 3 ? 'score-hi' : s >= 2 ? 'score-mid' : 'score-lo';
+  const scoreText = (s) => s >= 3 ? 'Strong' : s >= 2 ? 'Developing' : 'Needs work';
+
+  const priorAdviceHtml = fb.priorAdviceFollowed && fb.priorAdviceFollowed !== 'n/a'
+    ? `<div style="font-size:12px;margin-top:.5rem;padding:.35rem .7rem;border-radius:4px;${fb.priorAdviceFollowed.startsWith('yes') ? 'background:var(--green-light);color:var(--green)' : 'background:var(--amber-light);color:var(--amber)'}">
+        <strong>${fb.priorAdviceFollowed.startsWith('yes') ? '✓ Applied prior feedback:' : '↩ Prior feedback not yet applied:'}</strong> ${fb.priorAdviceFollowed.replace(/^(yes|no)\s*—\s*/i, '')}
+      </div>` : '';
+
+  const rewordHtml = fb.rewordExample
+    ? `<div style="font-size:13px;margin-top:.6rem;padding:.6rem .85rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)">
+        <span style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.2rem;color:var(--text3)">Suggested rephrasing</span>
+        <span style="color:var(--text2)">${fb.rewordExample}</span>
+      </div>` : '';
+
+  const altQHtml = fb.alternateQuestion
+    ? `<div style="font-size:13px;margin-top:.5rem;padding:.6rem .85rem;background:var(--coral-light);border:1px solid #F0997B;border-radius:var(--radius);color:var(--coral)">
+        <span style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.2rem">A more effective question</span>
+        ${fb.alternateQuestion}
+      </div>` : '';
+
+  const icfHtml = fb.icfContextualNote
+    ? `<div style="font-size:13px;margin-top:.5rem;padding:.6rem .85rem;background:var(--purple-light);border:1px solid #CECBF6;border-radius:var(--radius)">
+        <span style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.2rem;color:var(--purple)">ICF contextual factors</span>
+        <p style="color:#3C3489;margin-bottom:${fb.icfContextualExample ? '.4rem' : '0'}">${fb.icfContextualNote}</p>
+        ${fb.icfContextualExample ? `<div style="background:var(--surface);border-radius:4px;padding:.4rem .65rem;font-size:12px;color:var(--text2);border:1px solid var(--border)"><strong style="color:var(--text)">Better phrasing:</strong> ${fb.icfContextualExample}</div>` : ''}
+      </div>` : '';
+
+  const rationaleHtml = fb.rationaleNote
+    ? `<div style="font-size:12px;margin-top:.5rem;padding:.35rem .7rem;border-radius:4px;background:var(--surface);border:1px solid var(--border);color:var(--text2)">
+        <strong style="color:var(--text)">Your rationale:</strong> ${fb.rationaleNote}
+      </div>` : '';
+
+  const lowEffortHtml = fb.lowEffortFlag
+    ? `<div style="font-size:12px;margin-top:.5rem;padding:.4rem .7rem;border-radius:4px;background:var(--red-light);border:1px solid #F7C1C1;color:var(--red)">
+        <strong>Engagement note:</strong> This question or rationale may not reflect genuine clinical thinking. Submissions should represent your own reasoning — this will be noted in your final report.
+      </div>` : '';
+
+  const followupHtml = q.followups && q.followups.length > 0
+    ? q.followups.map(fu => `
+        <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px dashed var(--border)">
+          <span style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--purple)">Follow-up feedback</span>
+          ${fu.wordingFb ? `<p style="font-size:13px;color:var(--text2);margin-top:.3rem">${fu.wordingFb}</p>` : ''}
+        </div>`).join('')
+    : `<div style="margin-top:.75rem;padding-top:.75rem;border-top:1px dashed var(--border)">
+        <span style="font-size:11px;color:var(--text3);font-style:italic">No follow-up asked for this question.</span>
+      </div>`;
+
+  const log = document.getElementById('conversation-log');
+  const div = document.createElement('div');
+  div.className = 'fade-in';
+  div.style.marginBottom = '1.25rem';
+  div.innerHTML = `
+    <div class="feedback-box ${fbClass}">
+      <div style="display:flex;gap:.75rem;align-items:center;margin-bottom:.5rem;flex-wrap:wrap">
+        <h4 style="margin:0">Feedback — Question ${qIdx + 1}</h4>
+        <span>Relevance: <span class="score-tag ${scoreLabel(relScore)}">${scoreText(relScore)}</span></span>
+        <span>Wording: <span class="score-tag ${scoreLabel(wrdScore)}">${scoreText(wrdScore)}</span></span>
+      </div>
+      <p style="margin-bottom:.25rem">${fb.feedback}</p>
+      ${clarificationHtml}
+      ${priorAdviceHtml}
+      ${rationaleHtml}
+      ${lowEffortHtml}
+      ${rewordHtml}
+      ${altQHtml}
+      ${icfHtml}
+      ${followupHtml}
+    </div>
+    <hr class="divider">`;
+  log.appendChild(div);
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function appendToLog(entry) {
+  const log = document.getElementById('conversation-log');
+  const div = document.createElement('div');
+  div.className = 'fade-in';
+  div.style.marginBottom = '1rem';
+
+  if (entry.type === 'question') {
+    const stierHtml = entry.isStier
+      ? `<div class="stier-bar"><span style="font-size:15px">✦</span> Mr. Reyes opened up — this question unlocked something important he hadn't thought to share.</div>`
+      : entry.isStierPartial
+      ? `<div class="stier-partial-bar"><span style="font-size:14px">◈</span> Mr. Reyes shared some useful information here — a more strengths-based framing might have opened this further.</div>`
+      : '';
+    div.innerHTML = `
+      <div style="margin-bottom:.5rem">
+        <span style="font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3)">Question ${entry.num}</span>
+      </div>
+      <div style="background:var(--blue-light);border:1px solid #BCCFE8;border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:.5rem;font-size:14px;color:#1C3E6A">
+        <strong style="font-size:10px;display:block;margin-bottom:.2rem;opacity:.7;text-transform:uppercase;letter-spacing:.05em">You asked</strong>
+        ${entry.q}
+        <div style="font-size:12px;color:#1C4E82;margin-top:.3rem;font-style:italic;opacity:.85">Rationale: ${entry.r}</div>
+      </div>
+      ${stierHtml}
+      <div class="dad-bubble">${entry.dadResp}</div>`;
+  } else if (entry.type === 'followup') {
+    div.innerHTML = `
+      <div style="background:var(--purple-light);border:1px solid #CECBF6;border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.5rem;font-size:13px;color:var(--purple)">
+        <span style="font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;opacity:.7">Your follow-up</span><br>
+        ${entry.q}
+      </div>
+      <div class="dad-bubble" style="font-size:13px">${entry.dadResp}</div>`;
+  } else if (entry.type === 'clarification') {
+    div.innerHTML = `
+      <div style="margin-bottom:.4rem">
+        <span style="font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3)">Question ${entry.qNum} — first attempt</span>
+      </div>
+      <div style="background:var(--blue-light);border:1px solid #B5D4F4;border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.5rem;font-size:13px;color:#0C447C;opacity:.8">
+        <strong style="font-size:11px;display:block;margin-bottom:.15rem;opacity:.7;text-transform:uppercase;letter-spacing:.04em">You asked</strong>
+        ${entry.originalQ}
+      </div>
+      <div class="dad-bubble" style="font-size:13px">${entry.dadResp}</div>`;
+  }
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+async function generateReport() {
+  // show combined feedback for the last question before switching screens
+  if (state.questions.length > 0) {
+    const lastIdx = state.questions.length - 1;
+    showCombinedFeedback(lastIdx);
+  }
+  document.getElementById('step-questions').classList.add('hidden');
+  document.getElementById('step-report').classList.remove('hidden');
+  
+  const content = document.getElementById('report-content');
+  content.innerHTML = `<div class="card"><div class="loading-overlay"><div style="font-size:16px;margin-bottom:.5rem">Generating your report</div><div class="loading-dots" style="font-size:13px;color:var(--text3)">Analyzing your questions and preparing feedback</div></div></div>`;
+
+  const qSummary = state.questions.map((q, i) => {
+    let fb; try { fb = JSON.parse(q.feedback); } catch(e) { fb = { relevance: 2, wording: 2, feedback: q.feedback }; }
+    const adviceNote = fb.priorAdviceFollowed && fb.priorAdviceFollowed !== 'n/a'
+      ? ` | Prior advice followed: ${fb.priorAdviceFollowed}` : '';
+    const fuNote = q.followups && q.followups.length
+      ? ` | Follow-ups asked: ${q.followups.map(f => `"${f.q}"`).join(', ')}` : ' | No follow-up asked';
+    const rationaleNote = fb.rationaleNote ? ` | Rationale quality: ${fb.rationaleNote}` : '';
+    const flagNote = fb.lowEffortFlag ? ' | ⚑ LOW EFFORT FLAGGED' : '';
+    return `Q${i+1}: "${q.q}" | Dad said: "${q.dadResp}" | Rationale: "${q.r}" | Relevance: ${fb.relevance}/3, Wording: ${fb.wording}/3${adviceNote}${rationaleNote}${flagNote}${fuNote}`;
+  }).join('\n');
+
+  const totalFollowupsUsed = state.questions.reduce((sum, q) => sum + (q.followups ? q.followups.length : 0), 0);
+  const maxPossibleFollowups = state.maxFollowupsPerQuestion * state.maxQ;
+
+  const lowEffortSummary = state.lowEffortFlags.length
+    ? state.lowEffortFlags.map(f => `Q${f.qNum}: "${f.q}" — Rationale given: "${f.r}" — Note: ${f.note}`).join('\n')
+    : 'None flagged.';
+
+  const adviceSummary = state.adviceGiven.length
+    ? state.adviceGiven.map(a => `After Q${a.qNum} (${a.type}): "${a.suggestion}"`).join('\n')
+    : 'No specific suggestions were given.';
+
+  const missedTier1 = GAPS_TIER1.filter(gap => {
+    const allText = state.questions.map(q => q.q + ' ' + q.r).join(' ').toLowerCase();
+    const keywords = gap.toLowerCase().split(' ').filter(w => w.length > 4);
+    return keywords.filter(k => allText.includes(k)).length < 2;
+  });
+
+  const missedTier2 = GAPS_TIER2.filter(gap => {
+    const allText = state.questions.map(q => q.q + ' ' + q.r).join(' ').toLowerCase();
+    const keywords = gap.toLowerCase().split(' ').filter(w => w.length > 4);
+    return keywords.filter(k => allText.includes(k)).length < 2;
+  });
+
+  const totalMissed = missedTier1.length + missedTier2.length;
+  const studentLabel = state.studentName || 'Graduate Clinician';
+
+  const reportPrompt = `You are a clinical supervisor generating an end-of-exercise feedback report for a THIRD-SEMESTER graduate SLP student named ${studentLabel}. Be honest, direct, and warm. Do not over-soften. Be the supervisor who tells them the truth, not the one who only validates.
+
+CASE: Jamie Reyes-Villanueva, 3y4mo, suspected CAS, Spanish-dominant bilingual household, Pittsburgh PA
+INTERPRETER USED: ${window._usesInterpreter ? 'Yes — correct clinical choice' : 'No — student chose not to call an interpreter; the correct answer is yes'}
+INTERPRETER RATIONALE: "${state.interpreterRationale}"
+
+QUESTIONS ASKED:
+${qSummary}
+
+ADVICE GIVEN DURING EXERCISE:
+${adviceSummary}
+
+TIER 1 GAPS MISSED:
+${missedTier1.join('\n') || 'None — all Tier 1 gaps were addressed'}
+
+TIER 2 GAPS MISSED:
+${missedTier2.join('\n') || 'None'}
+
+TOTAL GAPS MISSED: ${totalMissed} of ${GAPS_TIER1.length + GAPS_TIER2.length}
+TOTAL FOLLOW-UPS USED: ${totalFollowupsUsed} of ${maxPossibleFollowups} possible (3 per question)
+
+S-TIER UNLOCKS ACHIEVED: ${[
+  ...state.questions.filter(q => q.isStier).map((q,i) => `FULL unlock Q${state.questions.indexOf(q)+1}: "${q.q}"`),
+  ...state.questions.filter(q => q.isStierPartial).map((q,i) => `PARTIAL unlock Q${state.questions.indexOf(q)+1}: "${q.q}"`)
+].join(', ') || 'None — neither strengths-based unlock was triggered at any level'}
+
+CALL STATUS: ${state.callEnded ? `ENDED EARLY — Mr. Reyes ended the call after question ${state.callEndedAt} because the student raised the CYF/GPS case cold. Only ${state.currentQ} of 5 questions were asked.` : 'Completed normally'}
+
+ICF CONTEXTUAL FACTORS NOTES FROM EXERCISE:
+${state.questions.map((q, i) => {
+  let fb; try { fb = JSON.parse(q.feedback); } catch(e) { fb = {}; }
+  return fb.icfContextualNote ? `Q${i+1}: ${fb.icfContextualNote}` : null;
+}).filter(Boolean).join('\n') || 'None noted'}
+
+LOW EFFORT / AI FLAGS:
+${lowEffortSummary}
+
+Generate a CLINICAL SUPERVISOR FEEDBACK REPORT. Use the sandwich method throughout — every section that includes critique opens with a genuine positive observation, delivers the substantive feedback clearly and directly, and closes with a specific, actionable encouragement. Clear is kind. Be the supervisor who is honest AND supportive. Avoid generic praise but also never lead with a negative.
+
+1. Overall assessment (3 sentences: one genuine strength visible across this student's work, one honest observation about the most significant pattern or gap, one encouraging note connecting this exercise to the actual evaluation. If S-tier unlocks were achieved, the strength observation should name what the student did that made that happen — specifically what clinical instinct or framing worked.)
+
+2. What worked (2-3 specific strengths with reference to their actual questions. If S-tier unlocks were achieved, name what was excellent about those questions — the framing, the tone, the strengths-based approach — and why that matters clinically. If no S-tier was achieved, briefly note that strengths-based and family-expertise-centered questions often unlock information not in the chart, and name the two areas that would have worked.)
+
+3. Missed opportunities (Tier 1 gaps not addressed — for each, explain why it matters for this evaluation and planning, and name what it might have looked like to ask it; close with encouragement about what knowing this gap now means for how they approach the evaluation)
+
+4. Follow-up use (Review each question alongside what Mr. Reyes said. Identify any responses where a follow-up was clearly warranted but not asked. Note whether the follow-ups they did ask were well-chosen moments. Open with what they did well in their follow-up choices, then name missed openings specifically, then encourage them to think about follow-up use in the actual evaluation.)
+
+${totalMissed > 3 ? `5. What could have been asked (REQUIRED): For each major missed gap, write the actual question as it could have been asked to Mr. Reyes, followed by one sentence on why it matters. Format: "You could have asked: [question]" — [clinical reason]. Close with an encouraging note about what this shows about their priorities.` : '5. What could have been asked: Not required — student addressed most key areas. Offer one brief note on how their question selection will set up the evaluation.'}
+
+6. Feedback uptake (if suggestions were given: open with what the student did apply, then name what wasn't yet incorporated, then encourage the specific change for the evaluation. Omit entirely if no suggestions were given.)
+
+7. Interpreter and language access (sandwich: one thing the student got right in their reasoning, then what was missing — at 3rd semester they should name Title VI and family-centered practice — then one specific note on how this will matter in the room with this family)
+
+8. Question wording (1-2 patterns: if consistent strengths, name and affirm them specifically; if recurring issues, name them directly with an example of the stronger phrasing, and close with encouragement)
+
+${state.questions.some(q => { try { return JSON.parse(q.feedback).icfContextualNote; } catch(e) { return false; } }) ? `9. ICF contextual factors (REQUIRED): For each concern, name the specific Environmental or Personal Factor not accounted for, explain why it is clinically relevant for this family's participation and activity, include the better-worded example, and close with an encouraging note about what it looks like when ICF environmental factors are well-integrated into clinical questions.` : ''}
+
+${state.callEnded ? `CALL ENDED EARLY (REQUIRED): Open with one thing the student should know — that this response from Mr. Reyes is real and important clinical information. Then explain clearly: (1) what happened and why it was a clinical misstep, (2) what this family has experienced and why cold disclosure would close rather than open a conversation, (3) what the student could have done instead, (4) how to approach trust-building in the actual evaluation. Close with an encouraging note: this lesson, learned here, will protect the therapeutic relationship with this family.` : ''}
+
+${state.lowEffortFlags.length > 0 ? `ENGAGEMENT AND ACADEMIC INTEGRITY (REQUIRED): Open by affirming that the rest of the work showed genuine clinical thinking. Then address the flags directly but professionally — describe what was observed (vague rationale, generic phrasing, apparent AI-generated content) and name the expectation clearly: this work should reflect the student's own reasoning, because that reasoning is what gets built through exercises like this. Close with encouragement about the value of doing the thinking themselves.` : ''}
+
+One question to sit with before the evaluation (a single substantive clinical question that challenges them to think more deeply about this case — something that opens rather than closes their thinking)
+
+Then generate a CASE HISTORY SUMMARY REPORT — a professional clinical document for Canvas submission. Include:
+- Header: Student clinician: ${studentLabel} | Client: Jamie Reyes-Villanueva | DOB: February 14, 2023 | Date of contact: ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})} | Interpreter: ${window._usesInterpreter ? 'Yes, Spanish' : 'No'}
+- Reason for contact
+- Questions asked and information obtained (include EVERY question the student asked, in order, with a brief note on what Alejandro said — this section is for instructor review)
+- Information organized by domain: communication, feeding, sensory/behavioral, family and social context, service history
+- Gaps remaining (what was not addressed and must be gathered at the evaluation)
+- Student signature line: ${studentLabel}, Graduate Clinician
+
+Separate with exactly: ===REPORT_BREAK===
+
+Use prose paragraphs for all feedback sections. Use structured lists in the case history summary where clinically appropriate.`;
+
+  try {
+    const result = await callClaude(reportPrompt, '', 2000);
+    const parts = result.split('===REPORT_BREAK===');
+    const supervisorFeedback = parts[0].trim();
+    const caseReport = parts[1] ? parts[1].trim() : '';
+    window._lastCaseReport = caseReport;
+
+    const scores = state.questions.map(q => {
+      let fb; try { fb = JSON.parse(q.feedback); } catch(e) { fb = { relevance: 2, wording: 2 }; }
+      return { r: fb.relevance || 2, w: fb.wording || 2 };
+    });
+    const avgRel = scores.reduce((a, b) => a + b.r, 0) / scores.length;
+    const avgWrd = scores.reduce((a, b) => a + b.w, 0) / scores.length;
+    const interpScore = window._usesInterpreter ? 3 : 1;
+
+    content.innerHTML = `
+      <div class="final-report-section fade-in">
+        <h2>Clinical Supervisor Feedback</h2>
+        <div class="score-summary">
+          <div class="score-card"><div class="sc-val">${avgRel.toFixed(1)}/3</div><div class="sc-label">Avg relevance</div></div>
+          <div class="score-card"><div class="sc-val">${avgWrd.toFixed(1)}/3</div><div class="sc-label">Avg wording</div></div>
+          <div class="score-card"><div class="sc-val">${state.questions.length}/5</div><div class="sc-label">Questions asked</div></div>
+          <div class="score-card"><div class="sc-val">${totalFollowupsUsed}/${maxPossibleFollowups}</div><div class="sc-label">Follow-ups used</div></div>
+          <div class="score-card"><div class="sc-val" style="color:${window._usesInterpreter ? 'var(--teal)' : 'var(--red)'}">${window._usesInterpreter ? '✓ Yes' : '✗ No'}</div><div class="sc-label">Interpreter</div></div>
+        </div>
+        <div style="font-size:14px;line-height:1.75;color:var(--text);white-space:pre-wrap">${supervisorFeedback}</div>
+      </div>
+      ${caseReport ? `
+      <div class="final-report-section fade-in">
+        <h2>Case History Summary — Ready to download</h2>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">This document summarizes the information gathered during your case history call with Alejandro. Download it to upload to Canvas.</p>
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+          <span style="font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;background:var(--surface2);color:var(--text3);border:1px solid var(--border)">Read only — download to submit</span>
+        </div>
+        <div class="report-preview" contenteditable="false" style="user-select:text;cursor:default" onkeydown="return false;">${caseReport}</div>
+        <div style="margin-top:1rem">
+          <button class="btn btn-primary" id="btn-download-docx" onclick="downloadReportDocx()">Download as Word document (.docx)</button>
+        </div>
+      </div>` : ''}`;
+  } catch(e) {
+    content.innerHTML = `<div class="card"><p style="color:var(--red)">Error generating report. Please refresh and try again.</p></div>`;
+  }
+}
+
+function downloadReportDocx() {
+  const btn = document.getElementById('btn-download-docx');
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
+
+  try {
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle } = docx;
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const rawReport = window._lastCaseReport || '';
+
+    const makeHeading = (text) => new Paragraph({
+      heading: HeadingLevel.HEADING_1,
+      children: [new TextRun({ text, bold: true, size: 28, font: 'Arial' })]
+    });
+
+    const makeH2 = (text) => new Paragraph({
+      heading: HeadingLevel.HEADING_2,
+      children: [new TextRun({ text, bold: true, size: 24, font: 'Arial' })]
+    });
+
+    const makePara = (text, opts = {}) => new Paragraph({
+      children: [new TextRun({ text: text || '', size: 22, font: 'Arial', ...opts })],
+      spacing: { after: 120 }
+    });
+
+    const makeBullet = (text) => new Paragraph({
+      bullet: { level: 0 },
+      children: [new TextRun({ text: text || '', size: 22, font: 'Arial' })],
+      spacing: { after: 80 }
+    });
+
+    const lines = rawReport.split('\n');
+    const children = [];
+
+    children.push(makeHeading('Case History Interview Summary'));
+    children.push(makePara(`Student Clinician: ${state.studentName || 'Graduate Clinician'}`));
+    children.push(makePara(`Date of Contact: ${today}`));
+    children.push(makePara('Client: Jamie Reyes-Villanueva  |  DOB: February 14, 2023'));
+    children.push(makePara('Student Clinician: Graduate Clinician, Graduate Clinician'));
+    children.push(makePara(`Interpreter Used: ${window._usesInterpreter ? 'Yes — Spanish interpreter on line' : 'No — English only'}`));
+    children.push(new Paragraph({ spacing: { after: 200 } }));
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) { children.push(new Paragraph({ spacing: { after: 80 } })); continue; }
+      if (trimmed.startsWith('##')) {
+        children.push(makeH2(trimmed.replace(/^#+\s*/, '')));
+      } else if (trimmed.startsWith('#')) {
+        children.push(makeHeading(trimmed.replace(/^#+\s*/, '')));
+      } else if (trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
+        children.push(makeBullet(trimmed.replace(/^[-•]\s*/, '')));
+      } else {
+        children.push(makePara(trimmed));
+      }
+    }
+
+    const doc = new Document({
+      styles: {
+        default: { document: { run: { font: 'Arial', size: 22 } } },
+        paragraphStyles: [
+          { id: 'Heading1', name: 'Heading 1', basedOn: 'Normal', next: 'Normal',
+            run: { size: 28, bold: true, font: 'Arial' },
+            paragraph: { spacing: { before: 240, after: 120 }, outlineLevel: 0 } },
+          { id: 'Heading2', name: 'Heading 2', basedOn: 'Normal', next: 'Normal',
+            run: { size: 24, bold: true, font: 'Arial' },
+            paragraph: { spacing: { before: 200, after: 100 }, outlineLevel: 1 } }
+        ]
+      },
+      sections: [{
+        properties: {
+          page: {
+            size: { width: 12240, height: 15840 },
+            margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 }
+          }
+        },
+        children
+      }]
+    });
+
+    Packer.toBlob(doc).then(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      const safeName = (state.studentName || 'Student').replace(/\s+/g, '_');
+      a.download = `Jamie_Reyes_CaseHistory_${safeName}.docx`;
+      a.click();
+      if (btn) { btn.disabled = false; btn.textContent = 'Download as Word document (.docx)'; }
+    });
+  } catch(e) {
+    console.error('docx error:', e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Download as Word document (.docx)'; }
+    alert('Could not generate Word document. Please try again.');
+  }
+}
+
+async function callClaude(userPrompt, systemPrompt = '', maxTokens = 1000) {
+  const messages = [{ role: 'user', content: userPrompt }];
+  const body = {
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: maxTokens,
+    messages
+  };
+  if (systemPrompt) body.system = systemPrompt;
+
+  const resp = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${resp.status}`);
+  }
+  const data = await resp.json();
+  return data.content.map(b => b.text || '').join('');
+}
+</script>
+</body>
+</html>
